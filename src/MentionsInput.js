@@ -33,11 +33,7 @@ export const makeTriggerRegex = function(trigger, options = {}) {
 
     // first capture group is the part to be replaced on completion
     // second capture group is for extracting the search query
-    return new RegExp(
-      `(?:^|\\s)(${escapedTriggerChar}([^${
-        allowSpaceInQuery ? '' : '\\s'
-      }${escapedTriggerChar}]*))$`
-    )
+    return new RegExp(`(?:^|\\s)(${escapedTriggerChar}([^${allowSpaceInQuery ? '' : '\\s'}${escapedTriggerChar}]*))$`)
   }
 }
 
@@ -78,24 +74,15 @@ const propTypes = {
   onSelect: PropTypes.func,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
-  suggestionsPortalHost:
-    typeof Element === 'undefined'
-      ? PropTypes.any
-      : PropTypes.PropTypes.instanceOf(Element),
+  suggestionsPortalHost: typeof Element === 'undefined' ? PropTypes.any : PropTypes.PropTypes.instanceOf(Element),
   inputRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
-      current:
-        typeof Element === 'undefined'
-          ? PropTypes.any
-          : PropTypes.instanceOf(Element),
+      current: typeof Element === 'undefined' ? PropTypes.any : PropTypes.instanceOf(Element),
     }),
   ]),
 
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-  ]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
 }
 
 class MentionsInput extends React.Component {
@@ -172,8 +159,7 @@ class MentionsInput extends React.Component {
         ref={el => {
           this.containerRef = el
         }}
-        {...this.props.style}
-      >
+        {...this.props.style}>
         {this.renderControl()}
         {this.renderSuggestionsOverlay()}
       </div>
@@ -212,15 +198,13 @@ class MentionsInput extends React.Component {
     return (
       <div {...style('control')}>
         {this.renderHighlighter(inputProps.style)}
-        {singleLine
-          ? this.renderInput(inputProps)
-          : this.renderTextarea(inputProps)}
+        {singleLine ? this.renderInput(inputProps) : this.renderTextarea(inputProps)}
       </div>
     )
   }
 
   renderInput = props => {
-    return <input type="text" ref={this.setInputRef} {...props} />
+    return <input type='text' ref={this.setInputRef} {...props} />
   }
 
   renderTextarea = props => {
@@ -261,16 +245,12 @@ class MentionsInput extends React.Component {
             scrollFocusedIntoView: false,
           })
         }
-        isLoading={this.isLoading()}
-      >
+        isLoading={this.isLoading()}>
         {this.props.children}
       </SuggestionsOverlay>
     )
     if (this.props.suggestionsPortalHost) {
-      return ReactDOM.createPortal(
-        suggestionsNode,
-        this.props.suggestionsPortalHost
-      )
+      return ReactDOM.createPortal(suggestionsNode, this.props.suggestionsPortalHost)
     } else {
       return suggestionsNode
     }
@@ -293,10 +273,7 @@ class MentionsInput extends React.Component {
           start: selectionStart,
           end: selectionEnd,
         }}
-        onCaretPositionChange={position =>
-          this.setState({ caretPosition: position })
-        }
-      >
+        onCaretPositionChange={position => this.setState({ caretPosition: position })}>
         {children}
       </Highlighter>
     )
@@ -304,10 +281,7 @@ class MentionsInput extends React.Component {
 
   // Returns the text to set as the value of the textarea with all markups removed
   getPlainText = () => {
-    return getPlainText(
-      this.props.value || '',
-      readConfigFromChildren(this.props.children)
-    )
+    return getPlainText(this.props.value || '', readConfigFromChildren(this.props.children))
   }
 
   executeOnChange = (event, ...args) => {
@@ -335,33 +309,18 @@ class MentionsInput extends React.Component {
 
     const config = readConfigFromChildren(children)
 
-    const markupStartIndex = mapPlainTextIndex(
-      value,
-      config,
-      selectionStart,
-      'START'
-    )
+    const markupStartIndex = mapPlainTextIndex(value, config, selectionStart, 'START')
     const markupEndIndex = mapPlainTextIndex(value, config, selectionEnd, 'END')
 
     const pastedMentions = event.clipboardData.getData('text/react-mentions')
     const pastedData = event.clipboardData.getData('text/plain')
 
-    const newValue = spliceString(
-      value,
-      markupStartIndex,
-      markupEndIndex,
-      pastedMentions || pastedData
-    )
+    const newValue = spliceString(value, markupStartIndex, markupEndIndex, pastedMentions || pastedData)
     const newPlainTextValue = getPlainText(newValue, config)
 
     const eventMock = { target: { ...event.target, value: newValue } }
 
-    this.executeOnChange(
-      eventMock,
-      newValue,
-      newPlainTextValue,
-      getMentions(newValue, config)
-    )
+    this.executeOnChange(eventMock, newValue, newPlainTextValue, getMentions(newValue, config))
   }
 
   saveSelectionToClipboard(event) {
@@ -370,22 +329,11 @@ class MentionsInput extends React.Component {
 
     const config = readConfigFromChildren(children)
 
-    const markupStartIndex = mapPlainTextIndex(
-      value,
-      config,
-      selectionStart,
-      'START'
-    )
+    const markupStartIndex = mapPlainTextIndex(value, config, selectionStart, 'START')
     const markupEndIndex = mapPlainTextIndex(value, config, selectionEnd, 'END')
 
-    event.clipboardData.setData(
-      'text/plain',
-      event.target.value.slice(selectionStart, selectionEnd)
-    )
-    event.clipboardData.setData(
-      'text/react-mentions',
-      value.slice(markupStartIndex, markupEndIndex)
-    )
+    event.clipboardData.setData('text/plain', event.target.value.slice(selectionStart, selectionEnd))
+    event.clipboardData.setData('text/react-mentions', value.slice(markupStartIndex, markupEndIndex))
   }
 
   supportsClipboardActions(event) {
@@ -422,36 +370,21 @@ class MentionsInput extends React.Component {
 
     const config = readConfigFromChildren(children)
 
-    const markupStartIndex = mapPlainTextIndex(
-      value,
-      config,
-      selectionStart,
-      'START'
-    )
+    const markupStartIndex = mapPlainTextIndex(value, config, selectionStart, 'START')
     const markupEndIndex = mapPlainTextIndex(value, config, selectionEnd, 'END')
 
-    const newValue = [
-      value.slice(0, markupStartIndex),
-      value.slice(markupEndIndex),
-    ].join('')
+    const newValue = [value.slice(0, markupStartIndex), value.slice(markupEndIndex)].join('')
     const newPlainTextValue = getPlainText(newValue, config)
 
     const eventMock = { target: { ...event.target, value: newPlainTextValue } }
 
-    this.executeOnChange(
-      eventMock,
-      newValue,
-      newPlainTextValue,
-      getMentions(value, config)
-    )
+    this.executeOnChange(eventMock, newValue, newPlainTextValue, getMentions(value, config))
   }
 
   // Handle input element's change event
   handleChange = ev => {
     // if we are inside iframe, we need to find activeElement within its contentDocument
-    const currentDocument =
-      (document.activeElement && document.activeElement.contentDocument) ||
-      document
+    const currentDocument = (document.activeElement && document.activeElement.contentDocument) || document
     if (currentDocument.activeElement !== ev.target) {
       // fix an IE bug (blur from empty input element with placeholder attribute trigger "input" event)
       return
@@ -463,16 +396,19 @@ class MentionsInput extends React.Component {
     let newPlainTextValue = ev.target.value
 
     // Derive the new value to set by applying the local change in the textarea's plain text
-    let newValue = applyChangeToValue(
-      value,
-      newPlainTextValue,
-      {
-        selectionStartBefore: this.state.selectionStart,
-        selectionEndBefore: this.state.selectionEnd,
-        selectionEndAfter: ev.target.selectionEnd,
-      },
-      config
-    )
+    let newValue =
+      newPlainTextValue === '@'
+        ? applyChangeToValue(
+            value,
+            newPlainTextValue,
+            {
+              selectionStartBefore: this.state.selectionStart,
+              selectionEndBefore: this.state.selectionEnd,
+              selectionEndAfter: ev.target.selectionEnd,
+            },
+            config
+          )
+        : newPlainTextValue
 
     // In case a mention is deleted, also adjust the new plain text value
     newPlainTextValue = getPlainText(newValue, config)
@@ -484,16 +420,9 @@ class MentionsInput extends React.Component {
 
     // Adjust selection range in case a mention will be deleted by the characters outside of the
     // selection range that are automatically deleted
-    let startOfMention = findStartOfMentionInPlainText(
-      value,
-      config,
-      selectionStart
-    )
+    let startOfMention = findStartOfMentionInPlainText(value, config, selectionStart)
 
-    if (
-      startOfMention !== undefined &&
-      this.state.selectionEnd > startOfMention
-    ) {
+    if (startOfMention !== undefined && this.state.selectionEnd > startOfMention) {
       // only if a deletion has taken place
       selectionStart = startOfMention
       selectionEnd = selectionStart
@@ -586,8 +515,7 @@ class MentionsInput extends React.Component {
     const suggestionsCount = countSuggestions(this.state.suggestions)
 
     this.setState({
-      focusIndex:
-        (suggestionsCount + this.state.focusIndex + delta) % suggestionsCount,
+      focusIndex: (suggestionsCount + this.state.focusIndex + delta) % suggestionsCount,
       scrollFocusedIntoView: true,
     })
   }
@@ -596,10 +524,7 @@ class MentionsInput extends React.Component {
     const { suggestions, focusIndex } = this.state
 
     const { result, queryInfo } = Object.values(suggestions).reduce(
-      (acc, { results, queryInfo }) => [
-        ...acc,
-        ...results.map(result => ({ result, queryInfo })),
-      ],
+      (acc, { results, queryInfo }) => [...acc, ...results.map(result => ({ result, queryInfo }))],
       []
     )[focusIndex]
 
@@ -669,10 +594,7 @@ class MentionsInput extends React.Component {
       left -= highlighter.scrollLeft
       position.top -= highlighter.scrollTop
       // guard for mentions suggestions list clipped by right edge of window
-      const viewportWidth = Math.max(
-        document.documentElement.clientWidth,
-        window.innerWidth || 0
-      )
+      const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
       if (left + suggestions.offsetWidth > viewportWidth) {
         position.left = Math.max(0, viewportWidth - suggestions.offsetWidth)
       } else {
@@ -746,12 +668,7 @@ class MentionsInput extends React.Component {
     const { children } = this.props
     const config = readConfigFromChildren(children)
 
-    const positionInValue = mapPlainTextIndex(
-      value,
-      config,
-      caretPosition,
-      'NULL'
-    )
+    const positionInValue = mapPlainTextIndex(value, config, caretPosition, 'NULL')
 
     // If caret is inside of mention, do not query
     if (positionInValue === null) {
@@ -759,14 +676,8 @@ class MentionsInput extends React.Component {
     }
 
     // Extract substring in between the end of the previous mention and the caret
-    const substringStartIndex = getEndOfLastMention(
-      value.substring(0, positionInValue),
-      config
-    )
-    const substring = plainTextValue.substring(
-      substringStartIndex,
-      caretPosition
-    )
+    const substringStartIndex = getEndOfLastMention(value.substring(0, positionInValue), config)
+    const substring = plainTextValue.substring(substringStartIndex, caretPosition)
 
     // Check if suggestions have to be shown:
     // Match the trigger patterns of all Mention children on the extracted substring
@@ -778,15 +689,8 @@ class MentionsInput extends React.Component {
       const regex = makeTriggerRegex(child.props.trigger, this.props)
       const match = substring.match(regex)
       if (match) {
-        const querySequenceStart =
-          substringStartIndex + substring.indexOf(match[1], match.index)
-        this.queryData(
-          match[2],
-          childIndex,
-          querySequenceStart,
-          querySequenceStart + match[1].length,
-          plainTextValue
-        )
+        const querySequenceStart = substringStartIndex + substring.indexOf(match[1], match.index)
+        this.queryData(match[2], childIndex, querySequenceStart, querySequenceStart + match[1].length, plainTextValue)
       }
     })
   }
@@ -801,13 +705,7 @@ class MentionsInput extends React.Component {
     })
   }
 
-  queryData = (
-    query,
-    childIndex,
-    querySequenceStart,
-    querySequenceEnd,
-    plainTextValue
-  ) => {
+  queryData = (query, childIndex, querySequenceStart, querySequenceEnd, plainTextValue) => {
     const mentionChild = Children.toArray(this.props.children)[childIndex]
     const provideData = getDataProvider(mentionChild.props.data)
     const syncResult = provideData(
@@ -835,15 +733,7 @@ class MentionsInput extends React.Component {
     }
   }
 
-  updateSuggestions = (
-    queryId,
-    childIndex,
-    query,
-    querySequenceStart,
-    querySequenceEnd,
-    plainTextValue,
-    results
-  ) => {
+  updateSuggestions = (queryId, childIndex, query, querySequenceStart, querySequenceEnd, plainTextValue, results) => {
     // neglect async results from previous queries
     if (queryId !== this._queryId) return
 
@@ -867,27 +757,16 @@ class MentionsInput extends React.Component {
     const suggestionsCount = countSuggestions(this.suggestions)
     this.setState({
       suggestions: this.suggestions,
-      focusIndex:
-        focusIndex >= suggestionsCount
-          ? Math.max(suggestionsCount - 1, 0)
-          : focusIndex,
+      focusIndex: focusIndex >= suggestionsCount ? Math.max(suggestionsCount - 1, 0) : focusIndex,
     })
   }
 
-  addMention = (
-    { id, display },
-    { childIndex, querySequenceStart, querySequenceEnd, plainTextValue }
-  ) => {
+  addMention = ({ id, display }, { childIndex, querySequenceStart, querySequenceEnd, plainTextValue }) => {
     // Insert mention in the marked up value at the correct position
     const value = this.props.value || ''
     const config = readConfigFromChildren(this.props.children)
     const mentionsChild = Children.toArray(this.props.children)[childIndex]
-    const {
-      markup,
-      displayTransform,
-      appendSpaceOnAdd,
-      onAdd,
-    } = mentionsChild.props
+    const { markup, displayTransform, appendSpaceOnAdd, onAdd } = mentionsChild.props
 
     const start = mapPlainTextIndex(value, config, querySequenceStart, 'START')
     const end = start + querySequenceEnd - querySequenceStart
@@ -914,12 +793,7 @@ class MentionsInput extends React.Component {
     // Propagate change
     const eventMock = { target: { value: newValue } }
     const mentions = getMentions(newValue, config)
-    const newPlainTextValue = spliceString(
-      plainTextValue,
-      querySequenceStart,
-      querySequenceEnd,
-      displayValue
-    )
+    const newPlainTextValue = spliceString(plainTextValue, querySequenceStart, querySequenceEnd, displayValue)
 
     this.executeOnChange(eventMock, newValue, newPlainTextValue, mentions)
 
@@ -947,15 +821,11 @@ class MentionsInput extends React.Component {
  * Note: According to spec and testing, can count on length values coming back in pixels. See https://developer.mozilla.org/en-US/docs/Web/CSS/used_value#Difference_from_computed_value
  */
 const getComputedStyleLengthProp = (forElement, propertyName) => {
-  const length = parseFloat(
-    window.getComputedStyle(forElement, null).getPropertyValue(propertyName)
-  )
+  const length = parseFloat(window.getComputedStyle(forElement, null).getPropertyValue(propertyName))
   return isFinite(length) ? length : 0
 }
 
-const isMobileSafari =
-  typeof navigator !== 'undefined' &&
-  /iPhone|iPad|iPod/i.test(navigator.userAgent)
+const isMobileSafari = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/i.test(navigator.userAgent)
 
 const styled = defaultStyle(
   {
